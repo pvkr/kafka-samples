@@ -1,6 +1,16 @@
 kafka-topics --zookeeper localhost:2181 --topic first_topic --create --partitions 3 --replication-factor 2
+
 kafka-console-producer --broker-list localhost:9092 --topic first_topic
+
 kafka-console-consumer --bootstrap-server localhost:9092 --topic first_topic
+kafka-console-consumer --bootstrap-server localhost:9092 --topic second_topic \
+     --from-beginning \
+     --formatter kafka.tools.DefaultMessageFormatter \
+     --property print.key=true \
+     --property print.value=true \
+     --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
+     --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+
 kafka-consumer-groups --bootstrap-server localhost:9092 --list
 kafka-consumer-groups --bootstrap-server localhost:9092 --group my-forth-app --describe
 kafka-consumer-groups --bootstrap-server localhost:9092 --group my-forth-app --reset-offsets --to-earliest --execute --topic first_topic
